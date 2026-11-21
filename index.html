@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Top Foot">
+<meta name="theme-color" content="#0f1419">
+<title>Top buteurs & passeurs</title>
+<style>
+  :root{--bg:#0f1419;--card:#18202a;--line:#263241;--text:#e8eef5;--mute:#8a9bb0;--goal:#4ade80;--assist:#60a5fa;--warn:#fbbf24}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;
+       padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .wrap{max-width:760px;margin:0 auto;padding:18px 14px 56px}
+  h1{font-size:1.35rem;margin:0 0 14px}
+  select{width:100%;font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;appearance:none;-webkit-appearance:none}
+  #status{color:var(--mute);font-size:.85rem;min-height:1.3em;margin:2px 0 12px}
+  #status.err{color:#f87171}
+  .head{display:flex;align-items:center;gap:12px;margin:12px 0 14px}
+  .head img{width:44px;height:44px;object-fit:contain}
+  .head h2{margin:0;font-size:1.2rem}
+  .head small{color:var(--mute)}
+  h3{margin:18px 0 8px;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+  h3.g{color:var(--goal)} h3.a{color:var(--assist)}
+  .p{display:grid;grid-template-columns:28px 1fr auto;gap:2px 10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:9px}
+  .rk{grid-row:span 2;align-self:center;font-weight:700;font-size:1.2rem;color:var(--mute)}
+  .nm{font-weight:600}
+  .nm small{display:block;color:var(--mute);font-weight:400;font-size:.8rem}
+  .n{grid-row:span 2;align-self:center;font-size:1.8rem;font-weight:700}
+  .g .n{color:var(--goal)} .a .n{color:var(--assist)}
+  .last{grid-column:1/4;color:var(--mute);font-size:.85rem;padding-top:7px;margin-top:6px;border-top:1px dashed var(--line)}
+  .last b{color:var(--text);font-weight:600}
+  .last.wait{color:var(--warn)}
+  .empty{color:var(--mute);padding:6px 2px}
+  .foot{color:var(--mute);font-size:.75rem;margin-top:22px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>⚽ Top buteurs &amp; passeurs</h1>
+  <select id="league" aria-label="Championnat"></select>
+  <select id="team" aria-label="Club" disabled><option>Choisir un club…</option></select>
+  <div id="status">Chargement…</div>
+  <div id="out"></div>
+  <p class="foot">Données football-data.org, championnat uniquement. Les classements de passeurs ne listent que les joueurs ayant déjà marqué.</p>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+let current = null;
+
+function setStatus(t, err) { $("status").textContent = t || ""; $("status").className = err ? "err" : ""; }
+async function getJson(p) { const r = await fetch(p + "?t=" + Math.floor(Date.now() / 60000)); if (!r.ok) throw new Error(p + " : " + r.status); return r.json(); }
+const fmtDate = iso => new Date(iso).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+const fmtUpd = iso => new Date(iso).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+
+function lastLine(p, kind, teamId, pending) {
+  const label = kind === "goals" ? "Dernier but" : "Dernière passe";
+  if (!p.last) return `<div class="last wait">${label} : ${pending ? "recherche en cours (prochaine mise à jour)" : "introuvable dans les données"}</div>`;
+  const e = p.last;
+  const h = e.homeId === teamId ? `<b>${esc(e.home)}</b>` : esc(e.home);
+  const a = e.awayId === teamId ? `<b>${esc(e.away)}</b>` : esc(e.away);
+  return `<div class="last">${label} : <b>${esc(fmtDate(e.date))}</b><br>${h} ${e.hs ?? "?"}–${e.as ?? "?"} ${a} · ${e.minute}${e.inj ? "+" + e.inj : ""}'</div>`;
+}
+function card(p, i, kind, teamId, pending) {
+  const sub = kind === "goals"
+    ? `${p.played ?? "?"} matchs${p.pens ? ` · dont ${p.pens} pen.` : ""}`
+    : `${p.played ?? "?"} matchs · ${p.goals} but${p.goals > 1 ? "s" : ""}`;
+  return `<div class="p"><div class="rk">${i + 1}</div><div class="nm">${esc(p.name)}<small>${sub}</small></div><div class="n">${kind === "goals" ? p.goals : p.assists}</div>${lastLine(p, kind, teamId, pending)}</div>`;
+}
+function render() {
+  const { league, team } = current;
+  const pend = league.pending > 0;
+  const list = (arr, kind) => arr.length ? arr.map((p, i) => card(p, i, kind, team.id, pend)).join("") : '<div class="empty">Aucune donnée.</div>';
+  $("out").innerHTML =
+    `<div class="head">${team.crest ? `<img src="${esc(team.crest)}" alt="" onerror="this.remove()">` : ""}<div><h2>${esc(team.name)}</h2><small>${esc(league.name)} · saison ${esc(league.season)}</small></div></div>` +
+    `<div class="g"><h3 class="g">Meilleurs buteurs</h3>${list(team.goals, "goals")}</div>` +
+    `<div class="a"><h3 class="a">Meilleurs passeurs</h3>${list(team.assists, "assists")}</div>`;
+  setStatus("Mis à jour le " + fmtUpd(league.updated) + (pend ? " · certaines dates sont encore en cours de collecte" : ""));
+}
+
+async function loadLeague(code, keepTeam) {
+  $("team").disabled = true; $("out").innerHTML = ""; setStatus("Chargement…");
+  try {
+    const league = await getJson("data/" + code + ".json");
+    $("team").innerHTML = '<option value="">Choisir un club…</option>' + league.teams.map(t => `<option value="${t.id}">${esc(t.name)}</option>`).join("");
+    $("team").disabled = false; $("team").dataset.code = code;
+    current = { league, team: null };
+    store.set("league", code);
+    const want = keepTeam || store.get("team-" + code);
+    if (want && league.teams.some(t => String(t.id) === String(want))) { $("team").value = want; pick(); }
+    else setStatus("Mis à jour le " + fmtUpd(league.updated));
+  } catch (e) { setStatus("Données indisponibles pour ce championnat (première collecte en cours ?).", true); }
+}
+function pick() {
+  const id = $("team").value; if (!id || !current) return;
+  current.team = current.league.teams.find(t => String(t.id) === id);
+  store.set("team-" + current.league.code, id);
+  render();
+}
+(async function init() {
+  try {
+    const idx = await getJson("data/index.json");
+    if (!idx.leagues.length) throw new Error("vide");
+    $("league").innerHTML = idx.leagues.map(l => `<option value="${l.code}">${esc(l.name)}</option>`).join("");
+    const saved = store.get("league");
+    if (saved && idx.leagues.some(l => l.code === saved)) $("league").value = saved;
+    $("league").onchange = () => loadLeague($("league").value);
+    $("team").onchange = pick;
+    loadLeague($("league").value);
+  } catch (e) { setStatus("Aucune donnée pour l'instant : la première collecte n'a pas encore tourné.", true); }
+})();
+</script>
+</body>
+</html>
