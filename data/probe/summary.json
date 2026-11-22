@@ -1,0 +1,183 @@
+{
+ "at": "2026-11-22T09:53:27.750Z",
+ "log": {
+  "fra.1": {
+   "tries": [
+    {
+     "name": "sans-parametres",
+     "status": 200,
+     "error": null,
+     "events": 3,
+     "completed": 0
+    },
+    {
+     "name": "un-jour",
+     "status": 200,
+     "error": null,
+     "events": 5,
+     "completed": 5
+    },
+    {
+     "name": "7-jours",
+     "status": 400,
+     "error": null,
+     "events": null,
+     "completed": 0,
+     "body": "{\"code\":400,\"message\":\"Failed to get events endpoint.\"}"
+    },
+    {
+     "name": "21-jours-limit",
+     "status": 400,
+     "error": null,
+     "events": null,
+     "completed": 0,
+     "body": "{\"code\":400,\"message\":\"Failed to get events endpoint.\"}"
+    }
+   ],
+   "summary": {
+    "status": 200,
+    "error": null,
+    "topKeys": [
+     "boxscore",
+     "format",
+     "gameInfo",
+     "lastFiveGames",
+     "leaders",
+     "broadcasts",
+     "pickcenter",
+     "odds",
+     "hasOdds",
+     "news",
+     "rosters",
+     "videos",
+     "header",
+     "seasonseries",
+     "keyEvents",
+     "commentary",
+     "wallclockAvailable",
+     "meta",
+     "standings"
+    ]
+   }
+  },
+  "tur.1": {
+   "tries": [
+    {
+     "name": "sans-parametres",
+     "status": 200,
+     "error": null,
+     "events": 4,
+     "completed": 0
+    },
+    {
+     "name": "un-jour",
+     "status": 200,
+     "error": null,
+     "events": 4,
+     "completed": 4
+    },
+    {
+     "name": "7-jours",
+     "status": 400,
+     "error": null,
+     "events": null,
+     "completed": 0,
+     "body": "{\"code\":400,\"message\":\"Failed to get events endpoint.\"}"
+    },
+    {
+     "name": "21-jours-limit",
+     "status": 400,
+     "error": null,
+     "events": null,
+     "completed": 0,
+     "body": "{\"code\":400,\"message\":\"Failed to get events endpoint.\"}"
+    }
+   ],
+   "summary": {
+    "status": 200,
+    "error": null,
+    "topKeys": [
+     "boxscore",
+     "format",
+     "gameInfo",
+     "lastFiveGames",
+     "leaders",
+     "broadcasts",
+     "pickcenter",
+     "odds",
+     "hasOdds",
+     "news",
+     "rosters",
+     "videos",
+     "header",
+     "keyEvents",
+     "commentary",
+     "wallclockAvailable",
+     "meta",
+     "seasonseries",
+     "standings"
+    ]
+   }
+  },
+  "eng.1": {
+   "tries": [
+    {
+     "name": "sans-parametres",
+     "status": 200,
+     "error": null,
+     "events": 2,
+     "completed": 0
+    },
+    {
+     "name": "un-jour",
+     "status": 200,
+     "error": null,
+     "events": 7,
+     "completed": 7
+    },
+    {
+     "name": "7-jours",
+     "status": 400,
+     "error": null,
+     "events": null,
+     "completed": 0,
+     "body": "{\"code\":400,\"message\":\"Failed to get events endpoint.\"}"
+    },
+    {
+     "name": "21-jours-limit",
+     "status": 400,
+     "error": null,
+     "events": null,
+     "completed": 0,
+     "body": "{\"code\":400,\"message\":\"Failed to get events endpoint.\"}"
+    }
+   ],
+   "summary": {
+    "status": 200,
+    "error": null,
+    "topKeys": [
+     "boxscore",
+     "format",
+     "gameInfo",
+     "lastFiveGames",
+     "leaders",
+     "broadcasts",
+     "pickcenter",
+     "odds",
+     "hasOdds",
+     "rosters",
+     "news",
+     "article",
+     "videos",
+     "header",
+     "seasonseries",
+     "keyEvents",
+     "commentary",
+     "wallclockAvailable",
+     "meta",
+     "standings"
+    ]
+   }
+  }
+ }
+}

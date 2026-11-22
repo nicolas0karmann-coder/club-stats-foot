@@ -1,0 +1,1183 @@
+{
+ "keyEvents": [
+  {
+   "id": "55462674",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Makana Baku (Kocaelispor) Yellow Card at 4'",
+   "shortText": "Makana Baku Yellow Card",
+   "period": {
+    "number": 1
+   },
+   "clock": {
+    "value": 211,
+    "displayValue": "4'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "269467",
+      "displayName": "Makana Baku"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T16:03:55Z",
+   "shootout": false
+  },
+  {
+   "id": "55476566",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Vedat Muriqi (Fenerbahce) Substitution at 45'",
+   "shortText": "Vedat Muriqi Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 2700,
+    "displayValue": "45'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "240209",
+      "displayName": "Vedat Muriqi"
+     }
+    },
+    {
+     "athlete": {
+      "id": "139437",
+      "displayName": "Romelu Lukaku"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:04:21Z",
+   "shootout": false
+  },
+  {
+   "id": "55477370",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Tobias Gulliksen (Kocaelispor) Substitution at 60'",
+   "shortText": "Tobias Gulliksen Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 3584,
+    "displayValue": "60'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "295863",
+      "displayName": "Tobias Gulliksen"
+     }
+    },
+    {
+     "athlete": {
+      "id": "269467",
+      "displayName": "Makana Baku"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:19:27Z",
+   "shootout": false
+  },
+  {
+   "id": "55477390",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Metehan Altunbas (Kocaelispor) Substitution at 60'",
+   "shortText": "Metehan Altunbas Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 3593,
+    "displayValue": "60'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "287207",
+      "displayName": "Metehan Altunbas"
+     }
+    },
+    {
+     "athlete": {
+      "id": "261307",
+      "displayName": "Tayfur Bingöl"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:19:35Z",
+   "shootout": false
+  },
+  {
+   "id": "55477391",
+   "type": {
+    "id": "70",
+    "text": "Goal",
+    "type": "goal"
+   },
+   "text": "Milan Skriniar (Fenerbahce) Goal at 61'",
+   "shortText": "Milan Skriniar Goal",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 3615,
+    "displayValue": "61'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "175195",
+      "displayName": "Milan Skriniar"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:19:58Z",
+   "shootout": false
+  },
+  {
+   "id": "55477823",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Munir Mercan (Fenerbahce) Yellow Card at 69'",
+   "shortText": "Munir Mercan Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4088,
+    "displayValue": "69'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "290511",
+      "displayName": "Munir Mercan"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:27:51Z",
+   "shootout": false
+  },
+  {
+   "id": "55477824",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Matteo Guendouzi (Fenerbahce) Yellow Card at 69'",
+   "shortText": "Matteo Guendouzi Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4095,
+    "displayValue": "69'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "248676",
+      "displayName": "Matteo Guendouzi"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:27:58Z",
+   "shootout": false
+  },
+  {
+   "id": "55477922",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Ederson (Fenerbahce) Yellow Card at 71'",
+   "shortText": "Ederson Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4203,
+    "displayValue": "71'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "176948",
+      "displayName": "Ederson"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:29:46Z",
+   "shootout": false
+  },
+  {
+   "id": "55477927",
+   "type": {
+    "id": "98",
+    "text": "Penalty - Scored",
+    "type": "penalty---scored"
+   },
+   "text": "Berkan Kutlu (Kocaelispor) Penalty - Scored at 71'",
+   "shortText": "Berkan Kutlu Penalty - Scored",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4225,
+    "displayValue": "71'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "292252",
+      "displayName": "Berkan Kutlu"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:30:08Z",
+   "shootout": false
+  },
+  {
+   "id": "55478369",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Milan Skriniar (Fenerbahce) Yellow Card at 75'",
+   "shortText": "Milan Skriniar Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4451,
+    "displayValue": "75'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "175195",
+      "displayName": "Milan Skriniar"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:33:54Z",
+   "shootout": false
+  },
+  {
+   "id": "55478418",
+   "type": {
+    "id": "70",
+    "text": "Goal",
+    "type": "goal"
+   },
+   "text": "Matej Maglica (Kocaelispor) Goal at 76'",
+   "shortText": "Matej Maglica Goal",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4550,
+    "displayValue": "76'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "324323",
+      "displayName": "Matej Maglica"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:35:32Z",
+   "shootout": false
+  },
+  {
+   "id": "55478590",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Kerem Aktürkoglu (Fenerbahce) Substitution at 78'",
+   "shortText": "Kerem Aktürkoglu Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4624,
+    "displayValue": "78'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "306789",
+      "displayName": "Kerem Aktürkoglu"
+     }
+    },
+    {
+     "athlete": {
+      "id": "305629",
+      "displayName": "Ismail Yüksek"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:36:47Z",
+   "shootout": false
+  },
+  {
+   "id": "55478597",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "N'Golo Kanté (Fenerbahce) Substitution at 78'",
+   "shortText": "N'Golo Kanté Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4625,
+    "displayValue": "78'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "173556",
+      "displayName": "N'Golo Kanté"
+     }
+    },
+    {
+     "athlete": {
+      "id": "248676",
+      "displayName": "Matteo Guendouzi"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:36:48Z",
+   "shootout": false
+  },
+  {
+   "id": "55478883",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Tobias Gulliksen (Kocaelispor) Yellow Card at 81'",
+   "shortText": "Tobias Gulliksen Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4820,
+    "displayValue": "81'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "295863",
+      "displayName": "Tobias Gulliksen"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:40:03Z",
+   "shootout": false
+  },
+  {
+   "id": "55479131",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Kojo Peprah Oppong (Fenerbahce) Yellow Card at 83'",
+   "shortText": "Kojo Peprah Oppong Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 4942,
+    "displayValue": "83'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "357205",
+      "displayName": "Kojo Peprah Oppong"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:42:05Z",
+   "shootout": false
+  },
+  {
+   "id": "55479282",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Emir Ortakaya (Kocaelispor) Substitution at 85'",
+   "shortText": "Emir Ortakaya Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5041,
+    "displayValue": "85'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "310848",
+      "displayName": "Emir Ortakaya"
+     }
+    },
+    {
+     "athlete": {
+      "id": "384295",
+      "displayName": "Gonçalo Santos Sousa"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:43:44Z",
+   "shootout": false
+  },
+  {
+   "id": "55479283",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Serhat Öztasdelen (Kocaelispor) Yellow Card at 85'",
+   "shortText": "Serhat Öztasdelen Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5064,
+    "displayValue": "85'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "408090",
+      "displayName": "Serhat Öztasdelen"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:44:06Z",
+   "shootout": false
+  },
+  {
+   "id": "55479385",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Nene Dorgeles (Fenerbahce) Substitution at 86'",
+   "shortText": "Nene Dorgeles Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5129,
+    "displayValue": "86'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "329486",
+      "displayName": "Nene Dorgeles"
+     }
+    },
+    {
+     "athlete": {
+      "id": "322813",
+      "displayName": "Oguz Aydin"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:45:12Z",
+   "shootout": false
+  },
+  {
+   "id": "55479386",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Mert Müldür (Fenerbahce) Substitution at 86'",
+   "shortText": "Mert Müldür Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5139,
+    "displayValue": "86'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "266002",
+      "displayName": "Mert Müldür"
+     }
+    },
+    {
+     "athlete": {
+      "id": "290511",
+      "displayName": "Munir Mercan"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:45:22Z",
+   "shootout": false
+  },
+  {
+   "id": "55479801",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Mason Greenwood (Fenerbahce) Yellow Card at 90'",
+   "shortText": "Mason Greenwood Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5342,
+    "displayValue": "90'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "276221",
+      "displayName": "Mason Greenwood"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:48:45Z",
+   "shootout": false
+  },
+  {
+   "id": "55480006",
+   "type": {
+    "id": "76",
+    "text": "Substitution",
+    "type": "substitution"
+   },
+   "text": "Florian Ayé (Kocaelispor) Substitution at 90'+1'",
+   "shortText": "Florian Ayé Substitution",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5400,
+    "displayValue": "90'+1'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "223325",
+      "displayName": "Florian Ayé"
+     }
+    },
+    {
+     "athlete": {
+      "id": "142521",
+      "displayName": "Daniel Agyei"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:50:32Z",
+   "shootout": false
+  },
+  {
+   "id": "55480237",
+   "type": {
+    "id": "70",
+    "text": "Goal",
+    "type": "goal"
+   },
+   "text": "Mason Greenwood (Fenerbahce) Goal at 90'+3'",
+   "shortText": "Mason Greenwood Goal",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5400,
+    "displayValue": "90'+3'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "436",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "276221",
+      "displayName": "Mason Greenwood"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:52:18Z",
+   "shootout": false
+  },
+  {
+   "id": "55480432",
+   "type": {
+    "id": "94",
+    "text": "Yellow Card",
+    "type": "yellow-card"
+   },
+   "text": "Metehan Altunbas (Kocaelispor) Yellow Card at 90'+5'",
+   "shortText": "Metehan Altunbas Yellow Card",
+   "period": {
+    "number": 2
+   },
+   "clock": {
+    "value": 5400,
+    "displayValue": "90'+5'"
+   },
+   "scoringPlay": false,
+   "team": {
+    "id": "995",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "287207",
+      "displayName": "Metehan Altunbas"
+     }
+    }
+   ],
+   "source": {
+    "id": "38",
+    "description": "SA.ENVOY"
+   },
+   "wallclock": "2026-11-21T17:54:29Z",
+   "shootout": false
+  }
+ ],
+ "goalCommentary": [
+  {
+   "time": {
+    "value": 3615,
+    "displayValue": "61'"
+   },
+   "text": "Milan Skriniar (Fenerbahce) Goal at 61'",
+   "play": {
+    "id": "55477391",
+    "type": {
+     "id": "70",
+     "text": "Goal",
+     "type": "goal"
+    },
+    "text": "Milan Skriniar (Fenerbahce) Goal at 61'",
+    "shortText": "Milan Skriniar Goal",
+    "period": {
+     "number": 2
+    },
+    "clock": {
+     "value": 3615,
+     "displayValue": "61'"
+    },
+    "team": {
+     "displayName": "Fenerbahce"
+    },
+    "participants": [
+     {
+      "athlete": {
+       "displayName": "Milan Skriniar"
+      }
+     }
+    ],
+    "source": {
+     "id": "38",
+     "description": "SA.ENVOY"
+    },
+    "wallclock": "2026-11-21T17:19:58Z"
+   }
+  },
+  {
+   "time": {
+    "value": 4550,
+    "displayValue": "76'"
+   },
+   "text": "Matej Maglica (Kocaelispor) Goal at 76'",
+   "play": {
+    "id": "55478418",
+    "type": {
+     "id": "70",
+     "text": "Goal",
+     "type": "goal"
+    },
+    "text": "Matej Maglica (Kocaelispor) Goal at 76'",
+    "shortText": "Matej Maglica Goal",
+    "period": {
+     "number": 2
+    },
+    "clock": {
+     "value": 4550,
+     "displayValue": "76'"
+    },
+    "team": {
+     "displayName": "Kocaelispor"
+    },
+    "participants": [
+     {
+      "athlete": {
+       "displayName": "Matej Maglica"
+      }
+     }
+    ],
+    "source": {
+     "id": "38",
+     "description": "SA.ENVOY"
+    },
+    "wallclock": "2026-11-21T17:35:32Z"
+   }
+  },
+  {
+   "time": {
+    "value": 5400,
+    "displayValue": "90'+3'"
+   },
+   "text": "Mason Greenwood (Fenerbahce) Goal at 90'+3'",
+   "play": {
+    "id": "55480237",
+    "type": {
+     "id": "70",
+     "text": "Goal",
+     "type": "goal"
+    },
+    "text": "Mason Greenwood (Fenerbahce) Goal at 90'+3'",
+    "shortText": "Mason Greenwood Goal",
+    "period": {
+     "number": 2
+    },
+    "clock": {
+     "value": 5400,
+     "displayValue": "90'+3'"
+    },
+    "team": {
+     "displayName": "Fenerbahce"
+    },
+    "participants": [
+     {
+      "athlete": {
+       "displayName": "Mason Greenwood"
+      }
+     }
+    ],
+    "source": {
+     "id": "38",
+     "description": "SA.ENVOY"
+    },
+    "wallclock": "2026-11-21T17:52:18Z"
+   }
+  }
+ ],
+ "headerDetails": [
+  {
+   "clock": {
+    "value": 3615,
+    "displayValue": "61'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "436",
+    "uid": "s:600~t:436",
+    "location": "Fenerbahce",
+    "name": "Fenerbahce",
+    "abbreviation": "FEN",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "175195",
+      "displayName": "Milan Skriniar",
+      "shortName": "M. Skriniar",
+      "links": [
+       {
+        "language": "en-US",
+        "rel": [
+         "playercard",
+         "desktop",
+         "athlete"
+        ],
+        "href": "https://www.espn.com/soccer/player/_/id/175195/milan-skriniar",
+        "text": "Player Card",
+        "shortText": "Player Card"
+       }
+      ]
+     }
+    }
+   ],
+   "addedClock": {
+    "value": 0,
+    "displayValue": ""
+   },
+   "redCard": false,
+   "penaltyKick": false,
+   "ownGoal": false
+  },
+  {
+   "clock": {
+    "value": 4225,
+    "displayValue": "71'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "995",
+    "uid": "s:600~t:995",
+    "location": "Kocaelispor",
+    "name": "Kocaelispor",
+    "abbreviation": "KOC",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "292252",
+      "displayName": "Berkan Kutlu",
+      "shortName": "B. Kutlu",
+      "links": [
+       {
+        "language": "en-US",
+        "rel": [
+         "playercard",
+         "desktop",
+         "athlete"
+        ],
+        "href": "https://www.espn.com/soccer/player/_/id/292252/berkan-kutlu",
+        "text": "Player Card",
+        "shortText": "Player Card"
+       }
+      ]
+     }
+    }
+   ],
+   "addedClock": {
+    "value": 0,
+    "displayValue": ""
+   },
+   "redCard": false,
+   "penaltyKick": true,
+   "ownGoal": false
+  },
+  {
+   "clock": {
+    "value": 4550,
+    "displayValue": "76'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "995",
+    "uid": "s:600~t:995",
+    "location": "Kocaelispor",
+    "name": "Kocaelispor",
+    "abbreviation": "KOC",
+    "displayName": "Kocaelispor"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "324323",
+      "displayName": "Matej Maglica",
+      "shortName": "M. Maglica",
+      "links": [
+       {
+        "language": "en-US",
+        "rel": [
+         "playercard",
+         "desktop",
+         "athlete"
+        ],
+        "href": "https://www.espn.com/soccer/player/_/id/324323/matej-maglica",
+        "text": "Player Card",
+        "shortText": "Player Card"
+       }
+      ]
+     }
+    }
+   ],
+   "addedClock": {
+    "value": 0,
+    "displayValue": ""
+   },
+   "redCard": false,
+   "penaltyKick": false,
+   "ownGoal": false
+  },
+  {
+   "clock": {
+    "value": 5400,
+    "displayValue": "90'+3'"
+   },
+   "scoringPlay": true,
+   "team": {
+    "id": "436",
+    "uid": "s:600~t:436",
+    "location": "Fenerbahce",
+    "name": "Fenerbahce",
+    "abbreviation": "FEN",
+    "displayName": "Fenerbahce"
+   },
+   "participants": [
+    {
+     "athlete": {
+      "id": "276221",
+      "displayName": "Mason Greenwood",
+      "shortName": "M. Greenwood",
+      "links": [
+       {
+        "language": "en-US",
+        "rel": [
+         "playercard",
+         "desktop",
+         "athlete"
+        ],
+        "href": "https://www.espn.com/soccer/player/_/id/276221/mason-greenwood",
+        "text": "Player Card",
+        "shortText": "Player Card"
+       }
+      ]
+     }
+    }
+   ],
+   "addedClock": {
+    "value": 155,
+    "displayValue": "3"
+   },
+   "redCard": false,
+   "penaltyKick": false,
+   "ownGoal": false
+  }
+ ]
+}
