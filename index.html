@@ -33,6 +33,11 @@
   .last b{color:var(--text);font-weight:600}
   .last.wait{color:var(--warn)}
   .empty{color:var(--mute);padding:6px 2px}
+  .form{display:flex;gap:5px;margin:2px 0 8px}
+  .b{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;font-size:.72rem;font-weight:700;color:#0f1419}
+  .b.V{background:var(--goal)} .b.N{background:#94a3b8} .b.D{background:#f87171} .b.\?{background:var(--line);color:var(--text)}
+  .res{display:grid;grid-template-columns:22px 52px 1fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:6px;font-size:.9rem}
+  .res .rd{color:var(--mute);font-size:.8rem}
   .foot{color:var(--mute);font-size:.75rem;margin-top:22px}
 </style>
 </head>
@@ -71,12 +76,28 @@ function card(p, i, kind, teamId, pending) {
     : [pl, `${p.goals} but${p.goals > 1 ? "s" : ""}`].filter(Boolean).join(" · ");
   return `<div class="p"><div class="rk">${i + 1}</div><div class="nm">${esc(p.name)}${sub ? `<small>${sub}</small>` : ""}</div><div class="n">${kind === "goals" ? p.goals : p.assists}</div>${lastLine(p, kind, teamId, pending)}</div>`;
 }
+function recentBlock(team) {
+  if (!team.recent || !team.recent.length) return "";
+  const info = team.recent.map(m => {
+    const home = m.homeId === team.id, f = home ? m.hs : m.as, a = home ? m.as : m.hs;
+    const r = f == null || a == null ? "?" : f > a ? "V" : f < a ? "D" : "N";
+    return { m, home, r };
+  });
+  const rows = info.map(({ m, home, r }) => {
+    const d = new Date(m.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+    const h = home ? `<b>${esc(m.home)}</b>` : esc(m.home), a = !home ? `<b>${esc(m.away)}</b>` : esc(m.away);
+    return `<div class="res"><span class="b ${r}">${r}</span><span class="rd">${d}</span><span>${h} ${m.hs ?? "?"}–${m.as ?? "?"} ${a}</span></div>`;
+  }).join("");
+  const form = info.slice().reverse().map(({ r }) => `<span class="b ${r}">${r}</span>`).join("");
+  return `<h3 style="color:var(--mute)">Derniers résultats</h3><div class="form">${form}</div>${rows}`;
+}
 function render() {
   const { league, team } = current;
   const pend = league.pending > 0;
   const list = (arr, kind) => arr.length ? arr.map((p, i) => card(p, i, kind, team.id, pend)).join("") : '<div class="empty">Aucune donnée.</div>';
   $("out").innerHTML =
     `<div class="head">${team.crest ? `<img src="${esc(team.crest)}" alt="" onerror="this.remove()">` : ""}<div><h2>${esc(team.name)}</h2><small>${esc(league.name)} · saison ${esc(league.season)}</small></div></div>` +
+    recentBlock(team) +
     `<div class="g"><h3 class="g">Meilleurs buteurs</h3>${list(team.goals, "goals")}</div>` +
     `<div class="a"><h3 class="a">Meilleurs passeurs</h3>${list(team.assists, "assists")}</div>`;
   setStatus("Mis à jour le " + fmtUpd(league.updated) + (league.provisional ? ` · chiffres provisoires : collecte en cours (${league.done}/${league.total} matchs)` : pend ? " · certaines dates sont encore en cours de collecte" : ""));

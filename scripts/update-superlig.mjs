@@ -112,8 +112,9 @@ async function main() {
     .sort((a, b) => (b[f] - a[f]) || (b[other] - a[other]) || a.name.localeCompare(b.name)).slice(0, n);
   const out = [...teams.values()].sort((a, b) => a.name.localeCompare(b.name)).map(t => {
     const ps = byTeam.get(t.id);
+    const recent = finished.filter(m => m.homeId === t.id || m.awayId === t.id).slice(0, 5).map(m => sideInfo(m));
     return {
-      ...t,
+      ...t, recent,
       goals: top(ps, "goals", "assists").map(p => ({ id: p.id, name: p.name, goals: p.goals, assists: p.assists, played: null, pens: p.pens, last: p.lastGoal })),
       assists: top(ps, "assists", "goals").map(p => ({ id: p.id, name: p.name, goals: p.goals, assists: p.assists, played: null, pens: p.pens, last: p.lastAssist }))
     };

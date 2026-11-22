@@ -85,7 +85,11 @@ async function doLeague(code) {
                                played: r.playedMatches ?? null, pens: r.penalties || 0, last: null, _kind: kind });
     const g = topN(rows, "goals").map(r => mk(r, "goals"));
     const a = topN(rows, "assists").map(r => mk(r, "assists"));
-    out.set(id, { ...t, goals: g, assists: a });
+    const recent = finished.filter(m => m.homeTeam.id === id || m.awayTeam.id === id).slice(0, 5).map(m => ({
+      date: m.utcDate, homeId: m.homeTeam.id, awayId: m.awayTeam.id,
+      home: m.homeTeam.shortName || m.homeTeam.name, away: m.awayTeam.shortName || m.awayTeam.name,
+      hs: m.score?.fullTime?.home ?? null, as: m.score?.fullTime?.away ?? null }));
+    out.set(id, { ...t, goals: g, assists: a, recent });
     [...g, ...a].forEach(p => wanted.push(p));
   }
 
