@@ -5,7 +5,7 @@ import path from "node:path";
 
 const KEY = process.env.FOOTBALL_API_KEY;
 const BASE = process.env.FD_BASE || "https://api.football-data.org/v4";
-const LEAGUES = (process.env.LEAGUES || "FL1,PL,PD,SA,BL1,DED,PPL").split(",").map(s => s.trim()).filter(Boolean);
+const LEAGUES = (process.env.LEAGUES || "FL1,PL,PD,SA,BL1,DED,PPL,ELC,CL,BSA").split(",").map(s => s.trim()).filter(Boolean);
 const BUDGET = +(process.env.CALLS_PER_LEAGUE || 80);   // détails de matchs max par championnat et par exécution
 const GAP = +(process.env.GAP_MS ?? 6500);              // quota gratuit : 10 appels / minute
 const PAUSE_429 = +(process.env.PAUSE_429_MS ?? 65000);
@@ -13,7 +13,8 @@ const DATA = process.env.DATA_DIR || "data";
 const NAMES = {
   PL: "Premier League (Angleterre)", PD: "LaLiga (Espagne)", SA: "Serie A (Italie)",
   BL1: "Bundesliga (Allemagne)", FL1: "Ligue 1 (France)", DED: "Eredivisie (Pays-Bas)",
-  PPL: "Primeira Liga (Portugal)", ELC: "Championship (Angleterre D2)"
+  PPL: "Primeira Liga (Portugal)", ELC: "Championship (Angleterre D2)",
+  CL: "Ligue des champions", BSA: "Brasileirão (Brésil)"
 };
 
 if (!KEY) { console.error("FOOTBALL_API_KEY manquante (Settings → Secrets → Actions)."); process.exit(1); }
