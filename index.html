@@ -65,7 +65,7 @@ const fmtUpd = iso => new Date(iso).toLocaleString("fr-FR", { day: "numeric", mo
 
 function lastLine(p, kind, teamId, pending) {
   const label = kind === "goals" ? "Dernier but" : "Dernière passe";
-  if (!p.last) return `<div class="last wait">${label} : ${pending ? "recherche en cours (prochaine mise à jour)" : "introuvable dans les données"}</div>`;
+  if (!p.last) return pending ? `<div class="last wait">${label} : recherche en cours (prochaine mise à jour)</div>` : "";
   const e = p.last;
   const h = e.homeId === teamId ? `<b>${esc(e.home)}</b>` : esc(e.home);
   const a = e.awayId === teamId ? `<b>${esc(e.away)}</b>` : esc(e.away);
