@@ -7,4 +7,6 @@ Page statique (GitHub Pages) alimentée par un workflow GitHub Actions qui inter
 - `.github/workflows/update.yml` : planification (secret `FOOTBALL_API_KEY` requis)
 - `index.html` : la page (lit `data/`)
 
-Championnats : variable `LEAGUES` du script (par défaut tous les championnats du plan gratuit : `FL1,PL,PD,SA,BL1,DED,PPL,ELC,CL,BSA`).
+Süper Lig : `scripts/update-superlig.mjs` (API-Football, secret `APIFOOTBALL_KEY`, diagnostic dans `data/status-SL.json`).
+
+Championnats football-data.org : variable `LEAGUES` du script (par défaut tous les championnats du plan gratuit : `FL1,PL,PD,SA,BL1,DED,PPL,ELC,CL,BSA`).

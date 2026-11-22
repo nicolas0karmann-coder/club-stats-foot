@@ -65,10 +65,11 @@ function lastLine(p, kind, teamId, pending) {
   return `<div class="last">${label} : <b>${esc(fmtDate(e.date))}</b><br>${h} ${e.hs ?? "?"}–${e.as ?? "?"} ${a} · ${e.minute}${e.inj ? "+" + e.inj : ""}'</div>`;
 }
 function card(p, i, kind, teamId, pending) {
+  const pl = p.played != null ? `${p.played} matchs` : "";
   const sub = kind === "goals"
-    ? `${p.played ?? "?"} matchs${p.pens ? ` · dont ${p.pens} pen.` : ""}`
-    : `${p.played ?? "?"} matchs · ${p.goals} but${p.goals > 1 ? "s" : ""}`;
-  return `<div class="p"><div class="rk">${i + 1}</div><div class="nm">${esc(p.name)}<small>${sub}</small></div><div class="n">${kind === "goals" ? p.goals : p.assists}</div>${lastLine(p, kind, teamId, pending)}</div>`;
+    ? [pl, p.pens ? `dont ${p.pens} pen.` : ""].filter(Boolean).join(" · ")
+    : [pl, `${p.goals} but${p.goals > 1 ? "s" : ""}`].filter(Boolean).join(" · ");
+  return `<div class="p"><div class="rk">${i + 1}</div><div class="nm">${esc(p.name)}${sub ? `<small>${sub}</small>` : ""}</div><div class="n">${kind === "goals" ? p.goals : p.assists}</div>${lastLine(p, kind, teamId, pending)}</div>`;
 }
 function render() {
   const { league, team } = current;
@@ -78,7 +79,7 @@ function render() {
     `<div class="head">${team.crest ? `<img src="${esc(team.crest)}" alt="" onerror="this.remove()">` : ""}<div><h2>${esc(team.name)}</h2><small>${esc(league.name)} · saison ${esc(league.season)}</small></div></div>` +
     `<div class="g"><h3 class="g">Meilleurs buteurs</h3>${list(team.goals, "goals")}</div>` +
     `<div class="a"><h3 class="a">Meilleurs passeurs</h3>${list(team.assists, "assists")}</div>`;
-  setStatus("Mis à jour le " + fmtUpd(league.updated) + (pend ? " · certaines dates sont encore en cours de collecte" : ""));
+  setStatus("Mis à jour le " + fmtUpd(league.updated) + (league.provisional ? ` · chiffres provisoires : collecte en cours (${league.done}/${league.total} matchs)` : pend ? " · certaines dates sont encore en cours de collecte" : ""));
 }
 
 async function loadLeague(code, keepTeam) {
