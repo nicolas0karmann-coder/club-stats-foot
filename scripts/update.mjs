@@ -6,7 +6,8 @@ import path from "node:path";
 const KEY = process.env.FOOTBALL_API_KEY;
 const BASE = process.env.FD_BASE || "https://api.football-data.org/v4";
 const LEAGUES = (process.env.LEAGUES || "FL1,PL,PD,SA,BL1,DED,PPL,ELC,CL,BSA").split(",").map(s => s.trim()).filter(Boolean);
-const BUDGET = +(process.env.CALLS_PER_LEAGUE || 80);   // détails de matchs max par championnat et par exécution
+const BUDGET = +(process.env.CALLS_PER_LEAGUE || 80);
+const RECENT_BUDGET = +(process.env.RECENT_CALLS_PER_LEAGUE || 60);   // détails des matchs récents (buteurs affichés)   // détails de matchs max par championnat et par exécution
 const GAP = +(process.env.GAP_MS ?? 6500);              // quota gratuit : 10 appels / minute
 const PAUSE_429 = +(process.env.PAUSE_429_MS ?? 65000);
 const DATA = process.env.DATA_DIR || "data";
@@ -48,13 +49,14 @@ function topN(rows, field, n = 3) {
 }
 function slimMatch(m) {
   return {
-    id: m.id, date: m.utcDate,
+    v: 2, id: m.id, date: m.utcDate,
     homeId: m.homeTeam.id, awayId: m.awayTeam.id,
     home: m.homeTeam.shortName || m.homeTeam.name, away: m.awayTeam.shortName || m.awayTeam.name,
     hs: m.score?.fullTime?.home ?? null, as: m.score?.fullTime?.away ?? null,
     goals: (m.goals || []).map(g => ({
-      minute: g.minute, inj: g.injuryTime || null, type: g.type,
-      scorerId: g.scorer?.id ?? null, assistId: g.assist?.id ?? null
+      minute: g.minute, inj: g.injuryTime || null, type: g.type, team: g.team?.id ?? null,
+      scorerId: g.scorer?.id ?? null, assistId: g.assist?.id ?? null,
+      scorer: g.scorer?.name ?? null, assist: g.assist?.name ?? null
     }))
   };
 }
@@ -86,7 +88,7 @@ async function doLeague(code) {
     const g = topN(rows, "goals").map(r => mk(r, "goals"));
     const a = topN(rows, "assists").map(r => mk(r, "assists"));
     const recent = finished.filter(m => m.homeTeam.id === id || m.awayTeam.id === id).slice(0, 5).map(m => ({
-      date: m.utcDate, homeId: m.homeTeam.id, awayId: m.awayTeam.id,
+      id: m.id, date: m.utcDate, homeId: m.homeTeam.id, awayId: m.awayTeam.id,
       home: m.homeTeam.shortName || m.homeTeam.name, away: m.awayTeam.shortName || m.awayTeam.name,
       hs: m.score?.fullTime?.home ?? null, as: m.score?.fullTime?.away ?? null }));
     out.set(id, { ...t, goals: g, assists: a, recent });
@@ -106,6 +108,24 @@ async function doLeague(code) {
     }
     pending = pending.filter(p => { const ev = eventIn(d, p.id, p._kind); if (ev) { p.last = ev; return false; } return true; });
   }
+  // buteurs et passeurs des matchs récents (affichés sous chaque résultat)
+  let rcalls = 0;
+  const needed = new Set();
+  for (const t of out.values()) for (const r of t.recent) needed.add(r.id);
+  for (const id of needed) {
+    if (cache.matches[id]?.v === 2) continue;
+    if (rcalls >= RECENT_BUDGET) break;
+    rcalls++;
+    cache.matches[id] = slimMatch(await api(`/matches/${id}`));
+  }
+  for (const t of out.values()) for (const r of t.recent) {
+    const c = cache.matches[r.id];
+    r.goals = c?.v === 2
+      ? c.goals.slice().sort((a, b) => (a.minute + (a.inj || 0) / 100) - (b.minute + (b.inj || 0) / 100))
+          .map(g => ({ minute: g.minute, inj: g.inj, scorer: g.scorer, assist: g.assist, kind: g.type === "OWN" ? "O" : g.type === "PENALTY" ? "P" : null }))
+      : null;
+    delete r.id;
+  }
   await writeJson(cacheFile, cache);
 
   const season = sc.season?.startDate ? `${sc.season.startDate.slice(0, 4)}/${String(+sc.season.startDate.slice(0, 4) + 1).slice(2)}` : (sc.filters?.season || "");
@@ -117,7 +137,7 @@ async function doLeague(code) {
     code, name: NAMES[code] || code, season, updated: new Date().toISOString(),
     pending: incomplete ? pending.length : 0, teams: teamList
   });
-  console.log(`${code} : ${teamList.length} clubs, ${calls} détails récupérés, ${incomplete ? pending.length + " en attente" : "complet"}`);
+  console.log(`${code} : ${teamList.length} clubs, ${calls + rcalls} détails récupérés, ${incomplete ? pending.length + " en attente" : "complet"}`);
 }
 
 let ok = 0;

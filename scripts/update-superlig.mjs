@@ -53,7 +53,8 @@ function sideInfo(m) { return { date: m.date, home: m.home, away: m.away, homeId
 
 async function main() {
   const cacheFile = `${DATA}/cache/${CODE}.json`;
-  const cache = await readJson(cacheFile, { fixtures: {} });
+  const old = await readJson(cacheFile, null);
+  const cache = old && old.v === 2 ? old : { v: 2, fixtures: {} };   // v2 : garde aussi les csc
 
   const fx = await api(`/fixtures?league=${LEAGUE_ID}&season=${SEASON}&status=FT-AET-PEN`);
   const finished = (fx.response || []).map(f => ({
@@ -72,8 +73,8 @@ async function main() {
     calls++;
     const ev = await api(`/fixtures/events?fixture=${m.id}`);
     cache.fixtures[m.id] = (ev.response || [])
-      .filter(e => e.type === "Goal" && (e.detail === "Normal Goal" || e.detail === "Penalty") && e.player && e.player.id)
-      .map(e => ({ teamId: e.team.id, minute: e.time.elapsed, extra: e.time.extra || null, pen: e.detail === "Penalty",
+      .filter(e => e.type === "Goal" && (e.detail === "Normal Goal" || e.detail === "Penalty" || e.detail === "Own Goal") && e.player && e.player.id)
+      .map(e => ({ teamId: e.team.id, minute: e.time.elapsed, extra: e.time.extra || null, pen: e.detail === "Penalty", own: e.detail === "Own Goal",
                    scorerId: e.player.id, scorer: e.player.name, assistId: e.assist?.id ?? null, assist: e.assist?.name ?? null }));
   }
   await writeJson(cacheFile, cache);
@@ -90,6 +91,7 @@ async function main() {
     const evs = cache.fixtures[m.id]; if (!evs) continue;
     done++;
     for (const e of evs.slice().sort((a, b) => mmss(a.minute, a.extra) - mmss(b.minute, b.extra))) {
+      if (e.own) continue;   // un csc n'est ni un but ni une passe pour le joueur
       const s = get(e.teamId, e.scorerId, e.scorer);
       s.goals++; if (e.pen) s.pens++;
       s.lastGoal = { ...sideInfo(m), minute: e.minute, inj: e.extra };
@@ -112,7 +114,13 @@ async function main() {
     .sort((a, b) => (b[f] - a[f]) || (b[other] - a[other]) || a.name.localeCompare(b.name)).slice(0, n);
   const out = [...teams.values()].sort((a, b) => a.name.localeCompare(b.name)).map(t => {
     const ps = byTeam.get(t.id);
-    const recent = finished.filter(m => m.homeId === t.id || m.awayId === t.id).slice(0, 5).map(m => sideInfo(m));
+    const recent = finished.filter(m => m.homeId === t.id || m.awayId === t.id).slice(0, 5).map(m => ({
+      ...sideInfo(m),
+      goals: cache.fixtures[m.id]
+        ? cache.fixtures[m.id].slice().sort((a, b) => mmss(a.minute, a.extra) - mmss(b.minute, b.extra))
+            .map(e => ({ minute: e.minute, inj: e.extra, scorer: e.scorer, assist: e.assist, kind: e.own ? "O" : e.pen ? "P" : null }))
+        : null
+    }));
     return {
       ...t, recent,
       goals: top(ps, "goals", "assists").map(p => ({ id: p.id, name: p.name, goals: p.goals, assists: p.assists, played: null, pens: p.pens, last: p.lastGoal })),

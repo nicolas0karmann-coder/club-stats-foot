@@ -38,6 +38,8 @@
   .b.V{background:var(--goal)} .b.N{background:#94a3b8} .b.D{background:#f87171} .b.\?{background:var(--line);color:var(--text)}
   .res{display:grid;grid-template-columns:22px 52px 1fr;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:6px;font-size:.9rem}
   .res .rd{color:var(--mute);font-size:.8rem}
+  .res .gl{grid-column:2/4;color:var(--mute);font-size:.8rem;line-height:1.5}
+  .res .gl .as{color:var(--assist)}
   .foot{color:var(--mute);font-size:.75rem;margin-top:22px}
 </style>
 </head>
@@ -86,7 +88,8 @@ function recentBlock(team) {
   const rows = info.map(({ m, home, r }) => {
     const d = new Date(m.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
     const h = home ? `<b>${esc(m.home)}</b>` : esc(m.home), a = !home ? `<b>${esc(m.away)}</b>` : esc(m.away);
-    return `<div class="res"><span class="b ${r}">${r}</span><span class="rd">${d}</span><span>${h} ${m.hs ?? "?"}–${m.as ?? "?"} ${a}</span></div>`;
+    const gl = (m.goals || []).map(g => `⚽ ${g.minute}${g.inj ? "+" + g.inj : ""}' ${esc(g.scorer)}${g.kind === "P" ? " (pen.)" : g.kind === "O" ? " (c.s.c.)" : ""}${g.assist ? ` <span class="as">· passe ${esc(g.assist)}</span>` : ""}`).join("<br>");
+    return `<div class="res"><span class="b ${r}">${r}</span><span class="rd">${d}</span><span>${h} ${m.hs ?? "?"}–${m.as ?? "?"} ${a}</span>${gl ? `<div class="gl">${gl}</div>` : ""}</div>`;
   }).join("");
   const form = info.slice().reverse().map(({ r }) => `<span class="b ${r}">${r}</span>`).join("");
   return `<h3 style="color:var(--mute)">Derniers résultats</h3><div class="form">${form}</div>${rows}`;
