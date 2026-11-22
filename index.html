@@ -50,7 +50,7 @@
   <select id="team" aria-label="Club" disabled><option>Choisir un club…</option></select>
   <div id="status">Chargement…</div>
   <div id="out"></div>
-  <p class="foot">Données football-data.org, championnat uniquement. Les classements de passeurs ne listent que les joueurs ayant déjà marqué.</p>
+  <p class="foot">Classements : football-data.org (championnat uniquement ; les passeurs listés ont déjà marqué). Détail des derniers matchs : ESPN, source non officielle. Süper Lig : ESPN seul.</p>
 </div>
 <script>
 const $ = id => document.getElementById(id);
@@ -61,11 +61,18 @@ let current = null;
 function setStatus(t, err) { $("status").textContent = t || ""; $("status").className = err ? "err" : ""; }
 async function getJson(p) { const r = await fetch(p + "?t=" + Math.floor(Date.now() / 60000)); if (!r.ok) throw new Error(p + " : " + r.status); return r.json(); }
 const fmtDate = iso => new Date(iso).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+const fmtDay = d => new Date(d + "T12:00:00Z").toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
 const fmtUpd = iso => new Date(iso).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
 function lastLine(p, kind, teamId, pending) {
   const label = kind === "goals" ? "Dernier but" : "Dernière passe";
-  if (!p.last) return pending ? `<div class="last wait">${label} : recherche en cours (prochaine mise à jour)</div>` : "";
+  if (!p.last) {
+    const esp = current && current.league.espn;
+    if (!esp) return pending ? `<div class="last wait">${label} : recherche en cours (prochaine mise à jour)</div>` : "";
+    return esp.complete
+      ? `<div class="last">${label} : avant le ${esc(fmtDay(esp.from))}</div>`
+      : `<div class="last wait">${label} : recherche en cours (prochaine mise à jour)</div>`;
+  }
   const e = p.last;
   const h = e.homeId === teamId ? `<b>${esc(e.home)}</b>` : esc(e.home);
   const a = e.awayId === teamId ? `<b>${esc(e.away)}</b>` : esc(e.away);
@@ -97,13 +104,14 @@ function recentBlock(team) {
 function render() {
   const { league, team } = current;
   const pend = league.pending > 0;
-  const list = (arr, kind) => arr.length ? arr.map((p, i) => card(p, i, kind, team.id, pend)).join("") : '<div class="empty">Aucune donnée.</div>';
+  const list = (arr, kind) => arr.length ? arr.map((p, i) => card(p, i, kind, team.id, pend)).join("")
+    : `<div class="empty">${kind === "assists" && league.noAssists ? "Passes décisives non fournies pour ce championnat." : "Aucune donnée."}</div>`;
   $("out").innerHTML =
     `<div class="head">${team.crest ? `<img src="${esc(team.crest)}" alt="" onerror="this.remove()">` : ""}<div><h2>${esc(team.name)}</h2><small>${esc(league.name)} · saison ${esc(league.season)}</small></div></div>` +
     recentBlock(team) +
     `<div class="g"><h3 class="g">Meilleurs buteurs</h3>${list(team.goals, "goals")}</div>` +
     `<div class="a"><h3 class="a">Meilleurs passeurs</h3>${list(team.assists, "assists")}</div>`;
-  setStatus("Mis à jour le " + fmtUpd(league.updated) + (league.provisional ? ` · chiffres provisoires : collecte en cours (${league.done}/${league.total} matchs)` : pend ? " · certaines dates sont encore en cours de collecte" : ""));
+  setStatus("Mis à jour le " + fmtUpd(league.updated) + (league.provisional ? ` · chiffres provisoires : collecte en cours${league.done ? ` (${league.done}/${league.total} matchs)` : ""}` : pend ? " · certaines dates sont encore en cours de collecte" : ""));
 }
 
 async function loadLeague(code, keepTeam) {

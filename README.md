@@ -10,3 +10,5 @@ Page statique (GitHub Pages) alimentée par un workflow GitHub Actions qui inter
 Championnats football-data.org : variable `LEAGUES` du script (par défaut tous les championnats du plan gratuit : `FL1,PL,PD,SA,BL1,DED,PPL,ELC,CL,BSA`).
 
 Le plan gratuit de football-data.org ne donne pas le détail des buts (dernier but/passe, buteurs par match) : `FETCH_DETAILS=1` les active avec un plan qui les inclut.
+
+Détail des derniers matchs (buteurs, passeurs, dernier but/passe) et Süper Lig : `scripts/enrich-espn.mjs` (API non officielle d'ESPN, sans clé, un jour par requête, cache dans `data/cache/espn-*.json`). Diagnostic : `data/status-espn.json`.

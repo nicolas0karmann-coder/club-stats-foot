@@ -149,7 +149,7 @@ for (const code of LEAGUES) {
   catch (e) { console.error(code, "→", e.message); if (e.fatal) break; }
 }
 const leagues = [];
-for (const code of LEAGUES) {
+for (const code of [...LEAGUES, "SL"]) {   // SL = Süper Lig (scripts/enrich-espn.mjs)
   const j = await readJson(`${DATA}/${code}.json`, null);
   if (j) leagues.push({ code, name: j.name, season: j.season, updated: j.updated, pending: j.pending, provisional: !!j.provisional });
 }
