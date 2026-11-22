@@ -29,7 +29,8 @@ const dash = d => d.toISOString().slice(0, 10);
 
 // ---------- rapprochement des noms (FD ↔ ESPN)
 const STOP = new Set(["fc", "cf", "sc", "ac", "as", "afc", "fk", "sk", "sv", "vfb", "vfl", "tsg", "rc", "ssc", "us", "ud", "cd", "sd", "ca", "rcd", "club", "de", "the", "calcio", "bk", "if", "ik", "fsv", "sad", "1", "04", "05", "09", "1899", "1900"]);
-export function norm(s) { return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim(); }
+const TRANSLIT = { "ø": "o", "æ": "ae", "œ": "oe", "ð": "d", "þ": "th", "ł": "l", "đ": "d", "ß": "ss", "ı": "i" };
+export function norm(s) { return String(s || "").toLowerCase().replace(/[øæœðþłđßı]/g, c => TRANSLIT[c]).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim(); }
 const tokens = s => norm(s).split(" ").filter(Boolean);
 const tokEq = (a, b) => a === b || (a.length >= 4 && b.length >= 4 && (a.startsWith(b) || b.startsWith(a)));
 export function teamScore(a, b) {
