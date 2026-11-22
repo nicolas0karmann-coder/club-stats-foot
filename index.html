@@ -40,6 +40,9 @@
   .res .rd{color:var(--mute);font-size:.8rem}
   .res .gl{grid-column:2/4;color:var(--mute);font-size:.8rem;line-height:1.5}
   .res .gl .as{color:var(--assist)}
+  .res .gl .tn{font-weight:600}
+  .res .gl .gr.mine .tn{color:var(--goal)}
+  .res .gl .gr.opp{opacity:.8}
   .foot{color:var(--mute);font-size:.75rem;margin-top:22px}
 </style>
 </head>
@@ -95,7 +98,14 @@ function recentBlock(team) {
   const rows = info.map(({ m, home, r }) => {
     const d = new Date(m.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
     const h = home ? `<b>${esc(m.home)}</b>` : esc(m.home), a = !home ? `<b>${esc(m.away)}</b>` : esc(m.away);
-    const gl = (m.goals || []).map(g => `⚽ ${g.minute}${g.inj ? "+" + g.inj : ""}' ${esc(g.scorer)}${g.kind === "P" ? " (pen.)" : g.kind === "O" ? " (c.s.c.)" : ""}${g.assist ? ` <span class="as">· passe ${esc(g.assist)}</span>` : ""}`).join("<br>");
+    const gl = (m.goals || []).map(g => {
+      const tn = g.side === "H" ? m.home : g.side === "A" ? m.away : null;
+      const mine = g.side ? (g.side === "H") === home : null;
+      const who = esc(g.scorer) + (g.kind === "P" ? " (pen.)" : g.kind === "O" ? " (c.s.c.)" : "");
+      const lab = tn ? (g.kind === "O" ? ` <span class="tn">pour ${esc(tn)}</span>` : ` <span class="tn">(${esc(tn)})</span>`) : "";
+      const ass = g.assist ? ` <span class="as">· passe ${esc(g.assist)}</span>` : "";
+      return `<span class="gr ${mine === true ? "mine" : mine === false ? "opp" : ""}">⚽ ${g.minute}${g.inj ? "+" + g.inj : ""}' ${who}${lab}${ass}</span>`;
+    }).join("<br>");
     return `<div class="res"><span class="b ${r}">${r}</span><span class="rd">${d}</span><span>${h} ${m.hs ?? "?"}–${m.as ?? "?"} ${a}</span>${gl ? `<div class="gl">${gl}</div>` : ""}</div>`;
   }).join("");
   const form = info.slice().reverse().map(({ r }) => `<span class="b ${r}">${r}</span>`).join("");

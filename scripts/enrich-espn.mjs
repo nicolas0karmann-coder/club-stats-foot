@@ -110,6 +110,23 @@ export async function collect(slug, cache, from, today, budget, deadline) {
 // ---------- enrichissement des championnats football-data.org
 const byMinute = (a, b) => (a.minute + (a.inj || 0) / 100) - (b.minute + (b.inj || 0) / 100);
 const outGoal = g => ({ minute: g.minute, inj: g.inj, scorer: g.scorer, assist: g.assist, kind: g.kind });
+// buts d'un match avec l'équipe créditée : "H" (domicile) ou "A" (extérieur).
+// Pour un csc, on déduit le camp du score (buts du match non expliqués par les autres buts).
+export function outGoals(m) {
+  const gs = m.goals.slice().sort(byMinute);
+  const sideOf = g => g.kind === "O" ? null : g.teamId === m.homeId ? "H" : g.teamId === m.awayId ? "A" : null;
+  let nh = 0, na = 0, unknown = false;
+  for (const g of gs) { if (g.kind === "O") continue; const s = sideOf(g); if (s === "H") nh++; else if (s === "A") na++; else unknown = true; }
+  let dh = (m.hs ?? 0) - nh, da = (m.as ?? 0) - na;
+  return gs.map(g => {
+    let side = sideOf(g);
+    if (g.kind === "O") {
+      if (!unknown && dh > 0 && da <= 0) { side = "H"; dh--; }
+      else if (!unknown && da > 0 && dh <= 0) { side = "A"; da--; }
+    }
+    return { ...outGoal(g), side };
+  });
+}
 export function enrichLeague(lj, cache) {
   const espnTeams = new Map();
   const matches = Object.values(cache.matches).sort((a, b) => b.date.localeCompare(a.date));
@@ -130,7 +147,7 @@ export function enrichLeague(lj, cache) {
       const he = map.get(r.homeId), ae = map.get(r.awayId);
       const m = he && ae && matches.find(x => x.homeId === he && x.awayId === ae && dayDiff(x.date, r.date) <= 1.5 &&
                                               (r.hs == null || x.hs === r.hs) && (r.as == null || x.as === r.as));
-      r.goals = m ? m.goals.slice().sort(byMinute).map(outGoal) : null;
+      r.goals = m ? outGoals(m) : null;
     }
     for (const kind of ["goals", "assists"]) for (const p of t[kind]) {
       p.last = null; if (!eid) continue;
@@ -170,7 +187,7 @@ export function buildSL(cache, from, complete, season) {
   const list = [...teams.values()].sort((a, b) => a.name.localeCompare(b.name)).map(t => ({
     ...t,
     recent: desc.filter(m => +m.homeId === t.id || +m.awayId === t.id).slice(0, 5).map(m => ({
-      date: m.date, homeId: +m.homeId, awayId: +m.awayId, home: m.home, away: m.away, hs: m.hs, as: m.as, goals: m.goals.slice().sort(byMinute).map(outGoal) })),
+      date: m.date, homeId: +m.homeId, awayId: +m.awayId, home: m.home, away: m.away, hs: m.hs, as: m.as, goals: outGoals(m) })),
     goals: top(by.get(String(t.id)), "goals", "assists").map(p => ({ id: p.id, name: p.name, goals: p.goals, assists: p.assists, played: null, pens: p.pens, last: p.lastGoal })),
     assists: top(by.get(String(t.id)), "assists", "goals").map(p => ({ id: p.id, name: p.name, goals: p.goals, assists: p.assists, played: null, pens: p.pens, last: p.lastAssist }))
   }));
