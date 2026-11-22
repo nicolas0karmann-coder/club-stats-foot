@@ -11,9 +11,9 @@ import { fileURLToPath } from "node:url";
 const BASE = process.env.ESPN_BASE || "https://site.api.espn.com/apis/site/v2/sports/soccer";
 const DATA = process.env.DATA_DIR || "data";
 const GAP = +(process.env.GAP_MS ?? 700);
-const WINDOW_DAYS = +(process.env.WINDOW_DAYS || 70);
-const CALLS_PER_LEAGUE = +(process.env.CALLS_PER_LEAGUE || 150);
-const MAX_MS = +(process.env.MAX_MS || 40 * 60 * 1000);
+const WINDOW_DAYS = +(process.env.WINDOW_DAYS || 0);                 // 0 = depuis le début de la saison
+const CALLS_PER_LEAGUE = +(process.env.CALLS_PER_LEAGUE || 250);
+const MAX_MS = +(process.env.MAX_MS || 50 * 60 * 1000);
 
 const SLUGS = { FL1: "fra.1", PL: "eng.1", PD: "esp.1", SA: "ita.1", BL1: "ger.1", DED: "ned.1", PPL: "por.1", ELC: "eng.2", CL: "uefa.champions", BSA: "bra.1" };
 const SL = { code: "SL", slug: "tur.1", name: "Süper Lig (Turquie)" };
@@ -127,7 +127,7 @@ export function outGoals(m) {
     return { ...outGoal(g), side };
   });
 }
-export function enrichLeague(lj, cache) {
+export function enrichLeague(lj, cache, complete = false) {
   const espnTeams = new Map();
   const matches = Object.values(cache.matches).sort((a, b) => b.date.localeCompare(a.date));
   for (const m of matches) { espnTeams.set(m.homeId, m.home); espnTeams.set(m.awayId, m.away); }
@@ -160,6 +160,32 @@ export function enrichLeague(lj, cache) {
           break;
         }
       }
+    }
+  }
+  // Classement des passeurs complet : football-data.org ne liste que les joueurs ayant marqué.
+  // Si ESPN couvre toute la saison et fournit assez de passes, on le calcule depuis les matchs.
+  lj.assistSource = "fd";
+  if (complete) {
+    const tallies = new Map();   // équipe ESPN -> nom normalisé -> stats
+    let espnTotal = 0;
+    for (const m of matches.slice().reverse()) for (const g of m.goals.slice().sort(byMinute)) {
+      if (g.kind === "O" || !g.teamId) continue;
+      const tm = tallies.get(g.teamId) || tallies.set(g.teamId, new Map()).get(g.teamId);
+      const touch = (name) => { const k = norm(name); if (!tm.has(k)) tm.set(k, { name, goals: 0, assists: 0, lastAssist: null }); return tm.get(k); };
+      if (g.scorer) touch(g.scorer).goals++;
+      if (g.assist) { const a = touch(g.assist); a.assists++; a.lastAssist = { m, minute: g.minute, inj: g.inj }; espnTotal++; }
+    }
+    if (lj.assistsTotal > 0 && espnTotal >= 0.7 * lj.assistsTotal) {
+      for (const t of lj.teams) {
+        const eid = map.get(t.id), tm = eid && tallies.get(eid);
+        if (!tm) continue;
+        const top = [...tm.values()].filter(p => p.assists > 0)
+          .sort((a, b) => (b.assists - a.assists) || (b.goals - a.goals) || a.name.localeCompare(b.name)).slice(0, 3);
+        if (!top.length) continue;
+        t.assists = top.map(p => { const m = p.lastAssist.m; return { id: "e:" + norm(p.name), name: p.name, goals: p.goals, assists: p.assists, played: null, pens: 0,
+          last: { date: m.date, home: m.home, away: m.away, homeId: m.homeId === eid ? t.id : 0, awayId: m.awayId === eid ? t.id : 0, hs: m.hs, as: m.as, minute: p.lastAssist.minute, inj: p.lastAssist.inj } }; });
+      }
+      lj.assistSource = "espn";
     }
   }
 }
@@ -205,8 +231,10 @@ export async function main() {
     const cacheFile = `${DATA}/cache/espn-${code}.json`;
     const cache = await readJson(cacheFile, { days: {}, matches: {} });
     const y = today.getUTCMonth() >= 6 ? today.getUTCFullYear() : today.getUTCFullYear() - 1;
-    const from = code === "SL" ? new Date(Date.UTC(y, 7, 1, 12)) : addDays(today, -WINDOW_DAYS);
-    const res = await collect(slug, cache, from, today, code === "SL" ? CALLS_PER_LEAGUE + 60 : CALLS_PER_LEAGUE, deadline);
+    const lj0 = code === "SL" ? null : await readJson(`${DATA}/${code}.json`, null);
+    let from = code !== "SL" && lj0?.seasonStart ? new Date(lj0.seasonStart + "T12:00:00Z") : new Date(Date.UTC(y, 7, 1, 12));
+    if (WINDOW_DAYS > 0) from = addDays(today, -WINDOW_DAYS);
+    const res = await collect(slug, cache, from, today, CALLS_PER_LEAGUE, deadline);
     await writeJson(cacheFile, cache);
     status.leagues[code] = { slug, calls: res.calls, matches: Object.keys(cache.matches).length, complete: res.complete, errors: res.errors };
     console.log(`${code} (${slug}) : ${res.calls} appels, ${Object.keys(cache.matches).length} matchs, ${res.complete ? "complet" : "partiel"}${res.errors.length ? " — " + res.errors[0] : ""}`);
@@ -214,7 +242,7 @@ export async function main() {
       if (Object.keys(cache.matches).length) await writeJson(`${DATA}/SL.json`, buildSL(cache, from, res.complete, `${y}/${String((y + 1) % 100).padStart(2, "0")}`));
     } else {
       const lj = await readJson(`${DATA}/${code}.json`, null);
-      if (lj) { enrichLeague(lj, cache); lj.espn = { from: dash(from), complete: res.complete }; lj.pending = res.complete ? 0 : 1; await writeJson(`${DATA}/${code}.json`, lj); }
+      if (lj) { enrichLeague(lj, cache, res.complete); lj.espn = { from: dash(from), complete: res.complete }; lj.pending = res.complete ? 0 : 1; await writeJson(`${DATA}/${code}.json`, lj); }
     }
   }
   // index : ajoute la Süper Lig et resynchronise les indicateurs

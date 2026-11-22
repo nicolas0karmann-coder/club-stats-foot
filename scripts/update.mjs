@@ -137,7 +137,8 @@ async function doLeague(code) {
     return { ...t, goals: t.goals.map(clean), assists: t.assists.map(clean) };
   });
   await writeJson(`${DATA}/${code}.json`, {
-    code, name: NAMES[code] || code, season, updated: new Date().toISOString(),
+    code, name: NAMES[code] || code, season, seasonStart: sc.season?.startDate || null,
+    assistsTotal: sc.scorers.reduce((n, r) => n + (r.assists || 0), 0), updated: new Date().toISOString(),
     pending: incomplete ? pending.length : 0, teams: teamList
   });
   console.log(`${code} : ${teamList.length} clubs, ${calls + rcalls} détails récupérés, ${incomplete ? pending.length + " en attente" : "complet"}`);

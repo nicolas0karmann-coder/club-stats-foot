@@ -53,7 +53,7 @@
   <select id="team" aria-label="Club" disabled><option>Choisir un club…</option></select>
   <div id="status">Chargement…</div>
   <div id="out"></div>
-  <p class="foot">Classements : football-data.org (championnat uniquement ; les passeurs listés ont déjà marqué). Détail des derniers matchs : ESPN, source non officielle. Süper Lig : ESPN seul.</p>
+  <p class="foot">Classements : football-data.org (championnat uniquement). Passes et détail des matchs : ESPN, source non officielle. Süper Lig : ESPN seul.</p>
 </div>
 <script>
 const $ = id => document.getElementById(id);
@@ -72,9 +72,7 @@ function lastLine(p, kind, teamId, pending) {
   if (!p.last) {
     const esp = current && current.league.espn;
     if (!esp) return pending ? `<div class="last wait">${label} : recherche en cours (prochaine mise à jour)</div>` : "";
-    return esp.complete
-      ? `<div class="last">${label} : avant le ${esc(fmtDay(esp.from))}</div>`
-      : `<div class="last wait">${label} : recherche en cours (prochaine mise à jour)</div>`;
+    return esp.complete ? "" : `<div class="last wait">${label} : recherche en cours (prochaine mise à jour)</div>`;
   }
   const e = p.last;
   const h = e.homeId === teamId ? `<b>${esc(e.home)}</b>` : esc(e.home);
@@ -121,7 +119,8 @@ function render() {
     recentBlock(team) +
     `<div class="g"><h3 class="g">Meilleurs buteurs</h3>${list(team.goals, "goals")}</div>` +
     `<div class="a"><h3 class="a">Meilleurs passeurs</h3>${list(team.assists, "assists")}</div>`;
-  setStatus("Mis à jour le " + fmtUpd(league.updated) + (league.provisional ? ` · chiffres provisoires : collecte en cours${league.done ? ` (${league.done}/${league.total} matchs)` : ""}` : pend ? " · certaines dates sont encore en cours de collecte" : ""));
+  const asrc = league.assistSource === "espn" ? " · passeurs : saison complète (ESPN)" : league.assistSource === "fd" ? " · passeurs : joueurs ayant déjà marqué seulement (suivi complet en cours de collecte)" : "";
+  setStatus("Mis à jour le " + fmtUpd(league.updated) + asrc + (league.provisional ? ` · chiffres provisoires : collecte en cours${league.done ? ` (${league.done}/${league.total} matchs)` : ""}` : pend ? " · certaines dates sont encore en cours de collecte" : ""));
 }
 
 async function loadLeague(code, keepTeam) {
