@@ -6,6 +6,9 @@ import path from "node:path";
 const KEY = process.env.FOOTBALL_API_KEY;
 const BASE = process.env.FD_BASE || "https://api.football-data.org/v4";
 const LEAGUES = (process.env.LEAGUES || "FL1,PL,PD,SA,BL1,DED,PPL,ELC,CL,BSA").split(",").map(s => s.trim()).filter(Boolean);
+// Le plan gratuit de football-data.org ne fournit pas le détail des buts : désactivé par défaut.
+// Mettre FETCH_DETAILS=1 avec un abonnement qui les inclut pour activer dernier but/passe et buteurs des matchs.
+const DETAILS = process.env.FETCH_DETAILS === "1";
 const BUDGET = +(process.env.CALLS_PER_LEAGUE || 80);
 const RECENT_BUDGET = +(process.env.RECENT_CALLS_PER_LEAGUE || 60);   // détails des matchs récents (buteurs affichés)   // détails de matchs max par championnat et par exécution
 const GAP = +(process.env.GAP_MS ?? 6500);              // quota gratuit : 10 appels / minute
@@ -97,7 +100,7 @@ async function doLeague(code) {
 
   // dernier but / dernière passe : du match le plus récent au plus ancien
   let pending = wanted.slice(), calls = 0, incomplete = false;
-  for (const m of finished) {
+  for (const m of (DETAILS ? finished : [])) {
     if (!pending.length) break;
     let d = cache.matches[m.id];
     if (!d) {
@@ -112,7 +115,7 @@ async function doLeague(code) {
   let rcalls = 0;
   const needed = new Set();
   for (const t of out.values()) for (const r of t.recent) needed.add(r.id);
-  for (const id of needed) {
+  for (const id of (DETAILS ? needed : [])) {
     if (cache.matches[id]?.v === 2) continue;
     if (rcalls >= RECENT_BUDGET) break;
     rcalls++;
@@ -146,7 +149,7 @@ for (const code of LEAGUES) {
   catch (e) { console.error(code, "→", e.message); if (e.fatal) break; }
 }
 const leagues = [];
-for (const code of [...LEAGUES, "SL"]) {   // SL = Süper Lig (scripts/update-superlig.mjs)
+for (const code of LEAGUES) {
   const j = await readJson(`${DATA}/${code}.json`, null);
   if (j) leagues.push({ code, name: j.name, season: j.season, updated: j.updated, pending: j.pending, provisional: !!j.provisional });
 }
