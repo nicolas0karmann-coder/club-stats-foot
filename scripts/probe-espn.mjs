@@ -16,19 +16,29 @@ async function get(url) {
     const r = await fetch(url, { headers: { "user-agent": "Mozilla/5.0 (club-stats-probe)" } });
     const t = await r.text();
     let json = null; try { json = JSON.parse(t); } catch {}
-    return { status: r.status, json, bytes: t.length };
+    return { status: r.status, json, text: t, bytes: t.length };
   } catch (e) { return { status: 0, error: String(e.message || e) }; }
 }
 const ymd = d => d.toISOString().slice(0, 10).replace(/-/g, "");
-const to = new Date(), from = new Date(Date.now() - 21 * 864e5);
 
 const log = {};
+const d = n => ymd(new Date(Date.now() - n * 864e5));
+const variants = [
+  ["sans-parametres", ""],
+  ["un-jour", `?dates=${d(1)}`],
+  ["7-jours", `?dates=${d(7)}-${d(0)}`],
+  ["21-jours-limit", `?dates=${d(21)}-${d(0)}&limit=100`]
+];
 for (const slug of LEAGUES) {
-  const r = await get(`${BASE}/${slug}/scoreboard?dates=${ymd(from)}-${ymd(to)}&limit=100`);
-  log[slug] = { status: r.status, error: r.error || null, events: r.json?.events?.length ?? null };
-  const done = (r.json?.events || []).filter(e => e.status?.type?.completed);
-  log[slug].completed = done.length;
-  const ev = done[done.length - 1];
+  log[slug] = { tries: [] };
+  let ev = null;
+  for (const [name, q] of variants) {
+    const r = await get(`${BASE}/${slug}/scoreboard${q}`);
+    const done = (r.json?.events || []).filter(e => e.status?.type?.completed);
+    log[slug].tries.push({ name, status: r.status, error: r.error || null, events: r.json?.events?.length ?? null, completed: done.length,
+                           body: r.status === 200 ? undefined : (r.text || "").slice(0, 200) });
+    if (!ev && done.length) ev = done[done.length - 1];
+  }
   if (!ev) continue;
   const comp = ev.competitions?.[0];
   await save(`${slug}-scoreboard-event.json`, {
@@ -36,10 +46,10 @@ for (const slug of LEAGUES) {
     teams: comp?.competitors?.map(c => ({ team: c.team?.displayName, score: c.score })),
     details: comp?.details
   });
-  const s = await get(`${BASE}/${slug}/summary?event=${ev.id}`);
-  log[slug].summary = { status: s.status, error: s.error || null, topKeys: s.json ? Object.keys(s.json) : null };
-  if (s.json) {
-    const j = s.json;
+  const sm = await get(`${BASE}/${slug}/summary?event=${ev.id}`);
+  log[slug].summary = { status: sm.status, error: sm.error || null, body: sm.status === 200 ? undefined : (sm.text || "").slice(0, 200), topKeys: sm.json ? Object.keys(sm.json) : null };
+  if (sm.json) {
+    const j = sm.json;
     await save(`${slug}-summary-sample.json`, {
       keyEvents: (j.keyEvents || []).slice(0, 30),
       goalCommentary: (j.commentary || []).filter(c => /goal|assist/i.test(JSON.stringify(c))).slice(0, 12),
