@@ -5,7 +5,7 @@ import path from "node:path";
 
 const KEY = process.env.FOOTBALL_API_KEY;
 const BASE = process.env.FD_BASE || "https://api.football-data.org/v4";
-const LEAGUES = (process.env.LEAGUES || "FL1,PL,PD,SA,BL1").split(",").map(s => s.trim()).filter(Boolean);
+const LEAGUES = (process.env.LEAGUES || "FL1,PL,PD,SA,BL1,DED,PPL").split(",").map(s => s.trim()).filter(Boolean);
 const BUDGET = +(process.env.CALLS_PER_LEAGUE || 80);   // détails de matchs max par championnat et par exécution
 const GAP = +(process.env.GAP_MS ?? 6500);              // quota gratuit : 10 appels / minute
 const PAUSE_429 = +(process.env.PAUSE_429_MS ?? 65000);

@@ -7,4 +7,4 @@ Page statique (GitHub Pages) alimentée par un workflow GitHub Actions qui inter
 - `.github/workflows/update.yml` : planification (secret `FOOTBALL_API_KEY` requis)
 - `index.html` : la page (lit `data/`)
 
-Championnats : variable `LEAGUES` du script (par défaut `FL1,PL,PD,SA,BL1` ; aussi `DED,PPL,ELC`).
+Championnats : variable `LEAGUES` du script (par défaut `FL1,PL,PD,SA,BL1,DED,PPL` ; aussi `ELC`).
