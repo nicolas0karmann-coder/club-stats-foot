@@ -33,6 +33,12 @@ const TRANSLIT = { "ø": "o", "æ": "ae", "œ": "oe", "ð": "d", "þ": "th", "ł
 export function norm(s) { return String(s || "").toLowerCase().replace(/[øæœðþłđßı]/g, c => TRANSLIT[c]).normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, " ").trim(); }
 const tokens = s => norm(s).split(" ").filter(Boolean);
 const tokEq = (a, b) => a === b || (a.length >= 4 && b.length >= 4 && (a.startsWith(b) || b.startsWith(a)));
+const near = (a, b) => {   // une seule lettre d'écart (surnoms : Brugui / Brugué)
+  if (a.length < 5 || b.length < 5 || Math.abs(a.length - b.length) > 1) return false;
+  let i = 0; while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  const x = a.slice(i + 1), y = b.slice(i + 1);
+  return x === y || a.slice(i + 1) === b.slice(i) || a.slice(i) === b.slice(i + 1);
+};
 export function teamScore(a, b) {
   const A = tokens(a).filter(t => !STOP.has(t)), B = tokens(b).filter(t => !STOP.has(t));
   if (!A.length || !B.length) return 0;
@@ -43,7 +49,7 @@ export function nameMatch(a, b) {
   const A = tokens(a), B = tokens(b);
   if (!A.length || !B.length) return false;
   const [s, l] = A.length <= B.length ? [A, B] : [B, A];
-  return s.every(x => l.some(y => tokEq(x, y)));
+  return s.every(x => l.some(y => tokEq(x, y) || (s.length === 1 && near(x, y))));
 }
 
 // ---------- ESPN
@@ -180,10 +186,11 @@ export function enrichLeague(lj, cache, complete = false) {
       for (const t of lj.teams) {
         const eid = map.get(t.id), tm = eid && tallies.get(eid);
         if (!tm) continue;
+        const known = [...t.goals, ...t.assists];   // noms football-data : on les réutilise (Brugui = Roger Brugué)
         const top = [...tm.values()].filter(p => p.assists > 0)
           .sort((a, b) => (b.assists - a.assists) || (b.goals - a.goals) || a.name.localeCompare(b.name)).slice(0, 3);
         if (!top.length) continue;
-        t.assists = top.map(p => { const m = p.lastAssist.m; return { id: "e:" + norm(p.name), name: p.name, goals: p.goals, assists: p.assists, played: null, pens: 0,
+        t.assists = top.map(p => { const m = p.lastAssist.m; const fdp = known.find(k => nameMatch(k.name, p.name)); return { id: fdp ? fdp.id : "e:" + norm(p.name), name: fdp ? fdp.name : p.name, goals: p.goals, assists: p.assists, played: null, pens: 0,
           last: { date: m.date, home: m.home, away: m.away, homeId: m.homeId === eid ? t.id : 0, awayId: m.awayId === eid ? t.id : 0, hs: m.hs, as: m.as, minute: p.lastAssist.minute, inj: p.lastAssist.inj } }; });
       }
       lj.assistSource = "espn";
